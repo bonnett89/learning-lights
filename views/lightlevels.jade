@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h1.
+        Light Levels
+    ul
+        each level, i in lightlevels
+            li
+                a() #{level.value} at #{level.date}
