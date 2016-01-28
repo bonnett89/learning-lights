@@ -1,0 +1,14 @@
+# Logs
+Logs
+*.log
+
+# Dependency Directory
+node_modules
+
+# Project
+.idea
+.DS_Store
+
+# Compiled Files
+public/css/*
+public/js/*
