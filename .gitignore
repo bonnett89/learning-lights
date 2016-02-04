@@ -4,6 +4,7 @@ Logs
 
 # Dependency Directory
 node_modules
+bower_components
 
 # Project
 .idea
