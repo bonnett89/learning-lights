@@ -25,7 +25,7 @@ class LightingModeActions {
       });
   }
 
-  manualMode() {
+  manualMode(mode) {
     $.ajax({
       type: 'POST',
       url: '/api/lightingmode',
