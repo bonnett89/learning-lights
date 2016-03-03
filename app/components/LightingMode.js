@@ -39,38 +39,32 @@ class LightingMode extends React.Component {
 
     var mode = this.state.mode;
 
-    if (mode) {
+    if (mode == 'learning') {
       LightingModeActions.learningMode(mode);
     }
+
+    if (mode == 'manual') {
+      LightingModeActions.manualMode(mode);
+    }
   }
-
-
-
-                  //<div className='Button'>
-                  //  <button type='button' className='btn btn-primary' onClick={this.setLearningModeClick}>Learning</button>
-                  //</div>
-                  //<div className='Button'>
-                  //  <button type='button' className='btn btn-primary' onClick={this.setManualModeClick}>Manual</button>
-                  //</div>
 
   render() {
     return (
       <div className='container'>
         <div className='row flipInX animated'>
-          <div className='col-sm-8'>
-            <div className='panel panel-default'>
-              <div className='panel-heading'>Lighting Mode</div>
+          <div className='panel panel-default'>
+            <div className='panel-heading'>Lighting Mode</div>
               <div className='panel-body'>
-                  <form onSubmit={this.handleSubmit.bind(this)}>
+                <form onSubmit={this.handleSubmit.bind(this)}>
                   <div className={'form-group'}>
                     <div className='radio radio-inline'>
                       <input type='radio' name='lighting_mode' id='learning' value='learning' checked={this.state.mode === 'learning'}
-                             onChange={LightingModeActions.updateMode}/>
+                        onChange={LightingModeActions.updateMode}/>
                       <label htmlFor='learning'>Learning</label>
                     </div>
                     <div className='radio radio-inline'>
                       <input type='radio' name='lighting_mode' id='manual' value='manual' checked={this.state.mode === 'manual'}
-                             onChange={LightingModeActions.updateMode}/>
+                        onChange={LightingModeActions.updateMode}/>
                       <label htmlFor='manual'>Manual</label>
                     </div>
                   </div>
@@ -80,7 +74,6 @@ class LightingMode extends React.Component {
             </div>
           </div>
         </div>
-      </div>
     );
   }
 }

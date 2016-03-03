@@ -30,14 +30,12 @@ class Light extends React.Component {
     return (
       <div className='container'>
         <div className='row flipInX animated'>
-          <div className='col-sm-8'>
-            <div className='panel panel-default'>
-              <div className='panel-heading'>Light Details</div>
-              <div className='panel-body'>
-                  <div className='Button'>
-                    <button type='button' className='btn btn-primary' onClick={this.turnLightOnClick}>On</button>
-                    <button type='button' className='btn btn-secondary' onClick={this.turnLightOffClick}>Off</button>
-                  </div>
+          <div className='panel panel-default'>
+            <div className='panel-heading'>WeMo Light</div>
+            <div className='panel-body'>
+              <div className='Button'>
+                <button type='button' className='btn btn-primary' onClick={this.turnLightOnClick}>On</button>
+                <button type='button' className='btn btn-secondary' onClick={this.turnLightOffClick}>Off</button>
               </div>
             </div>
           </div>
