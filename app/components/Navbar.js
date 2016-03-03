@@ -66,8 +66,6 @@ class Navbar extends React.Component {
           <ul className='nav navbar-nav'>
             <li><Link to='/'>Home</Link></li>
             <li><Link to='/lightlevel'>Light Level</Link></li>
-            <li><Link to='/light'>Lights</Link></li>
-            <li><Link to='/lightingmode'>Lighting Mode</Link></li>
           </ul>
         </div>
       </nav>

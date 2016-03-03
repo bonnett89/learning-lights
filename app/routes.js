@@ -10,7 +10,5 @@ export default (
   <Route component={App}>
     <Route path='/' component={Home} />
     <Route path='/lightlevel' component={LightLevels} />
-    <Route path='/light' component={Light} />
-    <Route path='/lightingmode' component={LightingMode} />
   </Route>
 );
