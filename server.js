@@ -21,12 +21,13 @@ var Particle = require('particle-api-js');
 const EventEmmitter = require('events');
 const util = require('util');
 
-var network = require('./app/network/neuralNetwork').network; 
-var predict = require('./app/network/neuralNetwork').predict;
+//import methods from
+//var network = require('./neural_net/trained_network/neuralNetwork').network; 
+var predict = require('./neural_net/trained_network/neuralNetwork').predict;
 
 var app = express();
 
-
+// Connect to Mongo Database
 mongoose.connect('mongodb://localhost:27017/test');
 
 console.log(config.database);
@@ -43,44 +44,9 @@ mongoose.connection.once('open', function() {
 //Spark Section
 var token = "8949c6593b9a5f289e0c9b632270c4b29cd97cd1";
 var deviceId = '53ff71066667574827382467';
-/*
-spark.on('login', function() {
 
-  spark.getEventStream('lightReading', '53ff71066667574827382467', function(data) {
-    console.log("Event: " + data['data'] + " from core: " + data['coreid']);
-    var insertLight = function() {
-      var light = new Light({
-        value: data['data'],
-        date: new Date(Date.now())
-      });
-      light.save(function(err, light) {
-        if(err) return console.error(err);
-        console.log('Light reading saved!')
-      });  
-    }
-    insertLight();
-  });
-});
-*/
 var particle = new Particle();
-/*
-particle.getEventStream({ deviceId: deviceId, name: 'lightReading', auth: token}).then(function(data){
-  //console.log('Device variable retrieved successfully:', data);
-      var insertLight = function() {
-      var light = new Light({
-        value: data.body['result'],
-        date: new Date(Date.now())
-      });
-      //console.log(light._id);
-      light.save(function(err, light) {
-        if(err) return console.error(err);
-        console.log('Light reading saved!')
-      });
-    }
-    insertLight();
-  });
-*/
-//spark.login({ accessToken: token});
+
 function logLightLevel() {
   particle.getVariable({ deviceId: deviceId, name: 'lightReading', auth: token }, 200).then(function(data) {
           //console.log('Device variable retrieved successfully:', data);
@@ -161,14 +127,16 @@ function learningMode() {
 
 //setInterval(logLightLevel, 4000);
 
-
 app.set('port', process.env.PORT || 3000);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+/*
+* GET /api/lightinglevels
+* retrieve lighting levels from mongo
+*/
 app.get('/api/lightlevels', function(req, res, next){
   console.log("API CALL MADE");
   var params = req.query;
