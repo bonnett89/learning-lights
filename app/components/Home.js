@@ -1,10 +1,14 @@
 import React from 'react';
+import LightingMode from './LightingMode';
+import Light from './Light';
+import LightLevels from './LightLevels';
 
 class Home extends React.Component {
   render() {
     return (
-      <div className='alert alert-info'>
-        Hello from Home Component
+      <div>
+        <LightingMode />
+        <Light />
       </div>
     );
   }
