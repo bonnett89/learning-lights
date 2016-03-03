@@ -29,12 +29,13 @@ function getLightLevel (callback) {
   );
 }
 
-function lightOn () {
+function lightOn (callback) {
   var particle = new Particle();
   var fnPr = particle.callFunction({ deviceId: '53ff71066667574827382467', name: 'light', argument: 'on', auth: '4a5d5ba88a276fc988ad123247d9aeff744626c5' });
   
   fnPr.then(
     function(data) {
+      callback(null, data);
       console.log('Function called succesfully:', data);
     }, 
     function(err) {
@@ -43,15 +44,18 @@ function lightOn () {
   );
 }
 
-function lightOff () {
+function lightOff (callback) {
   var particle = new Particle();
   var fnPr = particle.callFunction({ deviceId: '53ff71066667574827382467', name: 'light', argument: 'off', auth: '4a5d5ba88a276fc988ad123247d9aeff744626c5' });
-              fnPr.then(
-                function(data) {
-                    console.log('Function called succesfully:', data);
-                }, function(err) {
-                    console.log('Function: An error occurred:', err);
-            });
+  fnPr.then(
+    function(data) {
+      callback(null, data);
+      console.log('Function called succesfully:', data);
+    }, 
+    function(err) {
+      console.log('Function: An error occurred:', err);
+    }
+  );
 }
 
 module.exports = {
