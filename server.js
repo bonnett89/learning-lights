@@ -21,9 +21,14 @@ var Particle = require('particle-api-js');
 const EventEmmitter = require('events');
 const util = require('util');
 
-//import methods from
-//var network = require('./neural_net/trained_network/neuralNetwork').network; 
+//import methods from neuralNetwork
 var predict = require('./neural_net/trained_network/neuralNetwork').predict;
+
+//import methods from particle.js
+var particleLogIn = require('./particle/Particle').logIn;
+var particleGetLightLevel = require('./particle/Particle').getLightLevel;
+var particleLightOn = require('./particle/Particle').lightOn;
+var particleLightOff = require('./particle/Particle').lightOff;
 
 var app = express();
 
@@ -41,11 +46,49 @@ mongoose.connection.once('open', function() {
   console.info('We are connected');
 })
 
-//Spark Section
+/*
+* Particle Section
+*/
 var token = "8949c6593b9a5f289e0c9b632270c4b29cd97cd1";
 var deviceId = '53ff71066667574827382467';
-
+var password = '';
 var particle = new Particle();
+
+function logIn() {
+  particleLogIn('bonnett89@gmail.com', password , function(err, data){
+    if (err) console.error('Error' + err);
+    console.log('Data: ' + data.body['access_token']);
+  })
+}
+
+logIn();
+
+function getLightLevel() {
+  particleGetLightLevel(function(err, data){
+    if (err) console.error('Error: ' + err);
+    insertLight(data);
+  });
+}
+
+function insertLight(data) {
+  var light = new Light({
+    value: data,
+    date: new Date(Date.now())
+  });
+  //console.log(light._id);
+  light.save(function(err, light) {
+    if(err) return console.error(err);
+    console.log('Light reading saved!');
+  });
+}
+
+function lightOn(){
+  particleLightOn(function(err, data){
+    if (err) console.error('Error: ' + err);
+    console.log(data);
+  });
+}
+
 
 function logLightLevel() {
   particle.getVariable({ deviceId: deviceId, name: 'lightReading', auth: token }, 200).then(function(data) {
