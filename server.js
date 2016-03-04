@@ -126,65 +126,37 @@ function learningMode() {
     if (err) console.error('Error: ' + err);
     getDate(data);
   });
-      /*
-      particle.getVariable({ deviceId: '53ff71066667574827382467', name: 'lightReading', auth: '4a5d5ba88a276fc988ad123247d9aeff744626c5' }).then(function(data) {
-        //console.log('Device variable retrieved successfully:', data);
-        var lightLevel = data.body['result'];
-        //console.log(lightLevel);
-        getDate(lightLevel);
-      }, function(err) {
-      console.log('An error occurred while getting attrs:', err);
-      });
-      */
+      
+  function getDate(l) {
+    var lightLevel = l / 1000;
+    //console.log(lightLevel);
+    var d = new Date(Date.now())
+    //console.log(d);
 
-      function getDate(l) {
-        var lightLevel = l / 1000;
-        //console.log(lightLevel);
-        var d = new Date(Date.now())
-        //console.log(d);
+    var dayOfWeek = d.getDay() / 10;
+    var timeInMs = d.getTime() / 10000000000000;
 
-        var dayOfWeek = d.getDay() / 10;
-        var timeInMs = d.getTime() / 10000000000000;
+    getPrediction(lightLevel, dayOfWeek, timeInMs);
+  }
 
-        getPrediction(lightLevel, dayOfWeek, timeInMs);
-      }
+  function getPrediction(l,d,t) {
+    
+    console.log('Light Level = ' + l * 1000);
+    //console.log('Day of Week = ' + d);
+    //console.log('Time Since 1970 = ' + t);
+    
+    //{ light: 0.02, day: 0.4, time: 0.1456332434279 }
+    var result = predict({ light: l, day: d, time: t});
 
-      function getPrediction(l,d,t) {
-        
-        console.log('Light Level = ' + l * 1000);
-        //console.log('Day of Week = ' + d);
-        //console.log('Time Since 1970 = ' + t);
-        
-        //{ light: 0.02, day: 0.4, time: 0.1456332434279 }
-        var result = predict({ light: l, day: d, time: t});
+    console.log('OFF: ' + result['off']);
+    console.log('ON: ' + result['on']);
 
-        console.log('OFF: ' + result['off']);
-        console.log('ON: ' + result['on']);
-
-        if (result['on'] > 0.5) {
-          lightOn();
-          /*
-          var fnPr = particle.callFunction({ deviceId: '53ff71066667574827382467', name: 'light', argument: 'on', auth: '4a5d5ba88a276fc988ad123247d9aeff744626c5' });
-          fnPr.then(
-            function(data) {
-              //console.log('Function called succesfully:', data);
-            }, function(err) {
-              console.log('Function: An error occurred:', err);
-          });
-          */
-        } else {
-          lightOff();
-          /*
-          var fnPr = particle.callFunction({ deviceId: '53ff71066667574827382467', name: 'light', argument: 'off', auth: '4a5d5ba88a276fc988ad123247d9aeff744626c5' });
-          fnPr.then(
-            function(data) {
-              //console.log('Function called succesfully:', data);
-            }, function(err) {
-              console.log('Function: An error occurred:', err);
-          });
-          */
-        }
-      }
+    if (result['on'] > 0.5) {
+      lightOn();
+    } else {
+      lightOff();
+    }
+  }
 }
 
 //setInterval(logLightLevel, 4000);
