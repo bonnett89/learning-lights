@@ -50,7 +50,7 @@ function lightOn (callback) {
   fnPr.then(
     function(data) {
       callback(null, data);
-      console.log('Function called succesfully:', data);
+      //console.log('Function called succesfully:', data);
     }, 
     function(err) {
       console.log('Function: An error occurred:', err);
@@ -64,7 +64,7 @@ function lightOff (callback) {
   fnPr.then(
     function(data) {
       callback(null, data);
-      console.log('Function called succesfully:', data);
+      //console.log('Function called succesfully:', data);
     }, 
     function(err) {
       console.log('Function: An error occurred:', err);
