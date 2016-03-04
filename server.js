@@ -29,6 +29,7 @@ var particleLogIn = require('./particle/Particle').logIn;
 var particleGetLightLevel = require('./particle/Particle').getLightLevel;
 var particleLightOn = require('./particle/Particle').lightOn;
 var particleLightOff = require('./particle/Particle').lightOff;
+var particleGetLightOn = require('./particle/Particle').getLightOn;
 
 var app = express();
 
@@ -61,7 +62,7 @@ function logIn() {
   })
 }
 
-logIn();
+//logIn();
 
 function getLightLevel() {
   particleGetLightLevel(function(err, data){
@@ -96,6 +97,13 @@ function lightOff(){
   });
 }
 
+function getLightOn(){
+  particleGetLightOn(function(err, data){
+    if (err) console.error('Error: ' + err);
+    //console.log('Data: ' + data);
+    return data;
+  });
+}
 
 function logLightLevel() {
   particle.getVariable({ deviceId: deviceId, name: 'lightReading', auth: token }, 200).then(function(data) {
@@ -126,65 +134,41 @@ function learningMode() {
     if (err) console.error('Error: ' + err);
     getDate(data);
   });
-      /*
-      particle.getVariable({ deviceId: '53ff71066667574827382467', name: 'lightReading', auth: '4a5d5ba88a276fc988ad123247d9aeff744626c5' }).then(function(data) {
-        //console.log('Device variable retrieved successfully:', data);
-        var lightLevel = data.body['result'];
-        //console.log(lightLevel);
-        getDate(lightLevel);
-      }, function(err) {
-      console.log('An error occurred while getting attrs:', err);
-      });
-      */
+      
+  function getDate(l) {
+    var lightLevel = l / 1000;
+    //console.log(lightLevel);
+    var d = new Date(Date.now())
+    //console.log(d);
 
-      function getDate(l) {
-        var lightLevel = l / 1000;
-        //console.log(lightLevel);
-        var d = new Date(Date.now())
-        //console.log(d);
+    var dayOfWeek = d.getDay() / 10;
+    var timeInMs = d.getTime() / 10000000000000;
 
-        var dayOfWeek = d.getDay() / 10;
-        var timeInMs = d.getTime() / 10000000000000;
+    getPrediction(lightLevel, dayOfWeek, timeInMs);
+  }
 
-        getPrediction(lightLevel, dayOfWeek, timeInMs);
+  function getPrediction(l,d,t) {
+    
+    console.log('Light Level = ' + l * 1000);
+    //console.log('Day of Week = ' + d);
+    //console.log('Time Since 1970 = ' + t);
+    
+    //{ light: 0.02, day: 0.4, time: 0.1456332434279 }
+    var result = predict({ light: l, day: d, time: t});
+
+    //console.log('OFF: ' + result['off']);
+    //console.log('ON: ' + result['on']);
+
+    particleGetLightOn(function(err, data){
+      if (err) console.error('Error: ' + err);
+      if (result['on'] > 0.5 && data == 0) {
+        lightOn();
       }
-
-      function getPrediction(l,d,t) {
-        
-        console.log('Light Level = ' + l * 1000);
-        //console.log('Day of Week = ' + d);
-        //console.log('Time Since 1970 = ' + t);
-        
-        //{ light: 0.02, day: 0.4, time: 0.1456332434279 }
-        var result = predict({ light: l, day: d, time: t});
-
-        console.log('OFF: ' + result['off']);
-        console.log('ON: ' + result['on']);
-
-        if (result['on'] > 0.5) {
-          lightOn();
-          /*
-          var fnPr = particle.callFunction({ deviceId: '53ff71066667574827382467', name: 'light', argument: 'on', auth: '4a5d5ba88a276fc988ad123247d9aeff744626c5' });
-          fnPr.then(
-            function(data) {
-              //console.log('Function called succesfully:', data);
-            }, function(err) {
-              console.log('Function: An error occurred:', err);
-          });
-          */
-        } else {
-          lightOff();
-          /*
-          var fnPr = particle.callFunction({ deviceId: '53ff71066667574827382467', name: 'light', argument: 'off', auth: '4a5d5ba88a276fc988ad123247d9aeff744626c5' });
-          fnPr.then(
-            function(data) {
-              //console.log('Function called succesfully:', data);
-            }, function(err) {
-              console.log('Function: An error occurred:', err);
-          });
-          */
-        }
-      }
+      if (result['off'] > 0.5 && data == 1) {
+        lightOff();
+      } 
+    });
+  }
 }
 
 //setInterval(logLightLevel, 4000);
@@ -238,6 +222,27 @@ app.post('/api/lightingmode', function(req, res, next) {
     }
   } catch (e) {
     return res.status(400).send({ message: 'Lighting Mode Error'});
+  }
+});
+
+/*
+* POST /api/lightstate
+* change the light state of a light
+*/
+app.post('/api/lightstate', function(req, res, next) {
+  var lightState = req.body.lightState;
+  console.log(req.body.lightState);
+  //console.log('Mode: ' + mode);
+  try {
+    if (lightState == 'on') {
+      particleLightOn();
+      res.send( { message: 'Light has been set to ' + lightState });
+    } else {
+      particleLightOff();
+      res.send( { message: 'Light has been set to ' + lightState });
+    }
+  } catch (e) {
+    return res.status(400).send({ message: 'Lighting State Error'});
   }
 });
 

@@ -9,30 +9,14 @@ class LightingModeActions {
     );
   }
 
-  learningMode(mode) {
+  lightingMode(mode) {
     $.ajax({
       type: 'POST',
       url: '/api/lightingmode',
       data: { mode: mode }
     })
       .done((data) => {
-        console.log('ajax done');
-        this.actions.changeLightingModeSuccess(data.message);
-      })
-      .fail((jqXhr) => {
-        console.log('ajax fail');
-        this.actions.changeLightingModeFail(jqXhr);
-      });
-  }
-
-  manualMode(mode) {
-    $.ajax({
-      type: 'POST',
-      url: '/api/lightingmode',
-      data: { mode: mode }
-    })
-      .done((data) => {
-        console.log('ajax done');
+        //console.log('ajax done');
         this.actions.changeLightingModeSuccess(data.message);
       })
       .fail((jqXhr) => {
