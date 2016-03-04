@@ -23,29 +23,12 @@ class LightingMode extends React.Component {
     LightingModeStore.unlisten(this.onChange);
   }
 
-  setLearningModeClick() {
-    console.log('LEARNING MODE');
-    var mode = this.state.mode;
-    LightingModeActions.learningMode(mode);
-  }
-
-  setManualModeClick() {
-    console.log('MANUAL MODE');
-    LightingModeActions.manualMode();
-  }
-
   handleSubmit(event) {
     event.preventDefault();
 
     var mode = this.state.mode;
 
-    if (mode == 'learning') {
-      LightingModeActions.learningMode(mode);
-    }
-
-    if (mode == 'manual') {
-      LightingModeActions.manualMode(mode);
-    }
+    LightingModeActions.LightingMode(mode);
   }
 
   render() {
