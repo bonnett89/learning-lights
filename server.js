@@ -15,11 +15,17 @@ var async = require('async');
 var request = require('request');
 var xml2js = require('xml2js');
 var spark = require('spark');
-var Light = require('./models/light');
 var _ = require('underscore');
 var Particle = require('particle-api-js');
+var jwt = require('jsonwebtoken');
+var morgan = require('morgan');
+
 const EventEmmitter = require('events');
 const util = require('util');
+
+//mongoose models
+var Light = require('./models/light');
+var User = require('./models/user');
 
 //import methods from neuralNetwork
 var predict = require('./neural_net/trained_network/neuralNetwork').predict;
@@ -34,6 +40,7 @@ var app = express();
 
 // Connect to Mongo Database
 mongoose.connect('mongodb://localhost:27017/test');
+app.set('superSecret', config.secret);
 
 console.log(config.database);
 
@@ -60,8 +67,6 @@ function logIn() {
     console.log('Data: ' + data.body['access_token']);
   })
 }
-
-logIn();
 
 function getLightLevel() {
   particleGetLightLevel(function(err, data){
@@ -158,14 +163,109 @@ function learningMode() {
     }
   }
 }
+var apiRoutes = express.Router();
 
 //setInterval(logLightLevel, 4000);
 
 app.set('port', process.env.PORT || 3000);
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+apiRoutes.use(function(req, res, next) {
+
+  // check header or url parameters or post parameters for token
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+  // decode token
+  if (token) {
+
+    // verifies secret and checks exp
+    jwt.verify(token, app.get('superSecret'), function(err, decoded) {      
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });    
+      } else {
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;    
+        next();
+      }
+    });
+
+  } else {
+
+    // if there is no token
+    // return an error
+    return res.status(403).send({ 
+        success: false, 
+        message: 'No token provided.' 
+    });
+    
+  }
+});
+
+apiRoutes.get('/', function(req, res) {
+  res.json({ message: 'Welcome to the coolest API on earth!' });
+});
+
+apiRoutes.get('/users', function(req, res) {
+  User.find({}, function(err, users) {
+    res.json(users);
+  });
+});
+
+apiRoutes.post('/authenticate', function(req, res) {
+  User.findOne({
+    name: req.body.name
+  }, function(err, user) {
+    if (err) throw err;
+
+    if (!user) {
+      res.json({ success: false, message: 'Authentication failed. User not found.' });
+    } else if (user) {
+
+      //check password
+      if (user.password != req.body.password) {
+        res.json({ success: false, message: 'Authentication failed. Wrong password.' });
+      } else {
+
+        // if user is found and password is correct
+        // create token
+        var token = jwt.sign(user, app.get('superSecret'), {
+          expiresInMinutes: 1440 //24 hours
+        });
+
+        //return information including token as JSON
+        res.json({
+          success: true,
+          message: 'Enjoy your token!',
+          token: token
+        });
+      }
+    }
+  });
+});
+
+/*
+* GET /setup
+*/
+
+app.get('/setup', function(req, res) {
+
+  //create sample user
+  var james = new User({
+    name: 'James Bonnett',
+    password: 'password',
+    admin: true
+  });
+
+  james.save(function(err) {
+    if (err) throw err;
+
+    console.log('User saved successfully');
+    res.json({ success: true });
+  });
+});
 
 /*
 * GET /api/lightinglevels
@@ -212,6 +312,8 @@ app.post('/api/lightingmode', function(req, res, next) {
     return res.status(400).send({ message: 'Lighting Mode Error'});
   }
 });
+
+app.use('/api', apiRoutes);
 
 app.use(function(req, res) {
   Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
