@@ -69,11 +69,6 @@ function logIn() {
   })
 }
 
-<<<<<<< HEAD
-=======
-//logIn();
-
->>>>>>> develop
 function getLightLevel() {
   particleGetLightLevel(function(err, data){
     if (err) console.error('Error: ' + err);
@@ -330,9 +325,7 @@ app.post('/api/lightingmode', function(req, res, next) {
   }
 });
 
-<<<<<<< HEAD
 app.use('/api', apiRoutes);
-=======
 /*
 * POST /api/lightstate
 * change the light state of a light
@@ -353,7 +346,6 @@ app.post('/api/lightstate', function(req, res, next) {
     return res.status(400).send({ message: 'Lighting State Error'});
   }
 });
->>>>>>> develop
 
 app.use(function(req, res) {
   Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
