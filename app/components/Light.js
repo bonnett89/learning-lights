@@ -14,16 +14,18 @@ class Light extends React.Component {
     this.setState(state);
   }
 
-  turnLightOnClick() {
-    LightActions.lightOn();
-  }
-
-  turnLightOffClick() {
-    LightActions.lightOff();
-  }
-
   componentDidMount() {
     console.log('Mounted');
+    LightStore.listen(this.onChange);
+  }
+
+  componentWillUnmount() {
+    LightStore.unlisten(this.onChange);
+  }
+
+  changeLightState(lightState) {
+    LightActions.updateLightState(lightState);
+    LightActions.changeLightState(lightState);
   }
 
   render() {
@@ -33,9 +35,12 @@ class Light extends React.Component {
           <div className='panel panel-default'>
             <div className='panel-heading'>WeMo Light</div>
             <div className='panel-body'>
+              <div>
+                <label>{this.state.lightState}</label>
+              </div>
               <div className='Button'>
-                <button type='button' className='btn btn-primary' onClick={this.turnLightOnClick}>On</button>
-                <button type='button' className='btn btn-secondary' onClick={this.turnLightOffClick}>Off</button>
+                <button type='button' id='on' className='btn btn-primary' onClick={this.changeLightState.bind(this, 'on')}>On</button>
+                <button type='button' id='off' className='btn btn-secondary' onClick={this.changeLightState.bind(this, 'off')}>Off</button>
               </div>
             </div>
           </div>

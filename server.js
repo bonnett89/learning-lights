@@ -35,6 +35,7 @@ var particleLogIn = require('./particle/Particle').logIn;
 var particleGetLightLevel = require('./particle/Particle').getLightLevel;
 var particleLightOn = require('./particle/Particle').lightOn;
 var particleLightOff = require('./particle/Particle').lightOff;
+var particleGetLightOn = require('./particle/Particle').getLightOn;
 
 var app = express();
 
@@ -68,6 +69,11 @@ function logIn() {
   })
 }
 
+<<<<<<< HEAD
+=======
+//logIn();
+
+>>>>>>> develop
 function getLightLevel() {
   particleGetLightLevel(function(err, data){
     if (err) console.error('Error: ' + err);
@@ -101,6 +107,13 @@ function lightOff(){
   });
 }
 
+function getLightOn(){
+  particleGetLightOn(function(err, data){
+    if (err) console.error('Error: ' + err);
+    //console.log('Data: ' + data);
+    return data;
+  });
+}
 
 function logLightLevel() {
   particle.getVariable({ deviceId: deviceId, name: 'lightReading', auth: token }, 200).then(function(data) {
@@ -153,14 +166,18 @@ function learningMode() {
     //{ light: 0.02, day: 0.4, time: 0.1456332434279 }
     var result = predict({ light: l, day: d, time: t});
 
-    console.log('OFF: ' + result['off']);
-    console.log('ON: ' + result['on']);
+    //console.log('OFF: ' + result['off']);
+    //console.log('ON: ' + result['on']);
 
-    if (result['on'] > 0.5) {
-      lightOn();
-    } else {
-      lightOff();
-    }
+    particleGetLightOn(function(err, data){
+      if (err) console.error('Error: ' + err);
+      if (result['on'] > 0.5 && data == 0) {
+        lightOn();
+      }
+      if (result['off'] > 0.5 && data == 1) {
+        lightOff();
+      } 
+    });
   }
 }
 var apiRoutes = express.Router();
@@ -313,7 +330,30 @@ app.post('/api/lightingmode', function(req, res, next) {
   }
 });
 
+<<<<<<< HEAD
 app.use('/api', apiRoutes);
+=======
+/*
+* POST /api/lightstate
+* change the light state of a light
+*/
+app.post('/api/lightstate', function(req, res, next) {
+  var lightState = req.body.lightState;
+  console.log(req.body.lightState);
+  //console.log('Mode: ' + mode);
+  try {
+    if (lightState == 'on') {
+      particleLightOn();
+      res.send( { message: 'Light has been set to ' + lightState });
+    } else {
+      particleLightOff();
+      res.send( { message: 'Light has been set to ' + lightState });
+    }
+  } catch (e) {
+    return res.status(400).send({ message: 'Lighting State Error'});
+  }
+});
+>>>>>>> develop
 
 app.use(function(req, res) {
   Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {
