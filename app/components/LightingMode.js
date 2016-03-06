@@ -15,7 +15,7 @@ class LightingMode extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Mounted');
+    //console.log('Mounted');
     LightingModeStore.listen(this.onChange);
   }
 
@@ -28,7 +28,7 @@ class LightingMode extends React.Component {
 
     var mode = this.state.mode;
 
-    LightingModeActions.LightingMode(mode);
+    LightingModeActions.lightingMode(mode);
   }
 
   render() {

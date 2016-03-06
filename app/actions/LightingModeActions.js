@@ -5,6 +5,7 @@ class LightingModeActions {
     this.generateActions(
       'changeLightingModeSuccess',
       'changeLightingModeFail',
+      'lightingMode',
       'updateMode'
     );
   }

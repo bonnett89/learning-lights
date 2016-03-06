@@ -17,7 +17,6 @@ class LightingModeStore {
   }
 
   onUpdateMode(event) {
-    console.log('mode changed');
     this.mode = event.target.value;
     this.helpBlock = '';
   }
