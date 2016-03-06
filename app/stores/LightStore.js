@@ -4,7 +4,7 @@ import LightActions from '../actions/LightActions';
 class LightStore {
   constructor() {
     this.bindActions(LightActions);
-    this.lightState = 'unknown';
+    this.lightState = '';
   }
 
   onChangeLightStateSuccess(successMessage) {
