@@ -40,10 +40,9 @@ var particleGetLightOn = require('./particle/Particle').getLightOn;
 var app = express();
 
 // Connect to Mongo Database
-mongoose.connect('mongodb://localhost:27017/test');
-app.set('superSecret', config.secret);
+mongoose.connect(config.database);
 
-console.log(config.database);
+app.set('superSecret', config.secret);
 
 mongoose.connection.on('error', function() {
   console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?');
@@ -185,6 +184,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*
 apiRoutes.use(function(req, res, next) {
 
   // check header or url parameters or post parameters for token
@@ -215,6 +215,7 @@ apiRoutes.use(function(req, res, next) {
     
   }
 });
+*/
 
 apiRoutes.get('/', function(req, res) {
   res.json({ message: 'Welcome to the coolest API on earth!' });
