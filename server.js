@@ -40,10 +40,9 @@ var particleGetLightOn = require('./particle/Particle').getLightOn;
 var app = express();
 
 // Connect to Mongo Database
-mongoose.connect('mongodb://localhost:27017/test');
-app.set('superSecret', config.secret);
+mongoose.connect(config.database);
 
-console.log(config.database);
+app.set('superSecret', config.secret);
 
 mongoose.connection.on('error', function() {
   console.info('Error: Could not connect to MongoDB. Did you forget to run `mongod`?');
@@ -69,11 +68,6 @@ function logIn() {
   })
 }
 
-<<<<<<< HEAD
-=======
-//logIn();
-
->>>>>>> develop
 function getLightLevel() {
   particleGetLightLevel(function(err, data){
     if (err) console.error('Error: ' + err);
@@ -166,8 +160,8 @@ function learningMode() {
     //{ light: 0.02, day: 0.4, time: 0.1456332434279 }
     var result = predict({ light: l, day: d, time: t});
 
-    //console.log('OFF: ' + result['off']);
-    //console.log('ON: ' + result['on']);
+    console.log('OFF: ' + result['off']);
+    console.log('ON: ' + result['on']);
 
     particleGetLightOn(function(err, data){
       if (err) console.error('Error: ' + err);
@@ -190,6 +184,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*
 apiRoutes.use(function(req, res, next) {
 
   // check header or url parameters or post parameters for token
@@ -220,6 +215,8 @@ apiRoutes.use(function(req, res, next) {
     
   }
 });
+*/
+
 
 apiRoutes.get('/', function(req, res) {
   res.json({ message: 'Welcome to the coolest API on earth!' });
@@ -263,9 +260,11 @@ apiRoutes.post('/authenticate', function(req, res) {
   });
 });
 
+
 /*
 * GET /setup
 */
+
 
 app.get('/setup', function(req, res) {
 
@@ -283,6 +282,7 @@ app.get('/setup', function(req, res) {
     res.json({ success: true });
   });
 });
+
 
 /*
 * GET /api/lightinglevels
@@ -315,8 +315,8 @@ var intervalId;
 
 app.post('/api/lightingmode', function(req, res, next) {
   var mode = req.body.mode;
-  console.log(req.body.mode);
-  //console.log('Mode: ' + mode);
+  //console.log(req.body.mode);
+  console.log('Mode: ' + mode);
   try {
     if (mode == 'learning') {
       intervalId = setInterval(learningMode, 10000);
@@ -330,9 +330,7 @@ app.post('/api/lightingmode', function(req, res, next) {
   }
 });
 
-<<<<<<< HEAD
 app.use('/api', apiRoutes);
-=======
 /*
 * POST /api/lightstate
 * change the light state of a light
@@ -353,7 +351,6 @@ app.post('/api/lightstate', function(req, res, next) {
     return res.status(400).send({ message: 'Lighting State Error'});
   }
 });
->>>>>>> develop
 
 app.use(function(req, res) {
   Router.match({ routes: routes.default, location: req.url }, function(err, redirectLocation, renderProps) {

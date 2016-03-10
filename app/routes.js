@@ -3,8 +3,6 @@ import {Route} from 'react-router';
 import App from './components/App';
 import Home from './components/Home';
 import LightLevels from './components/LightLevels';
-import Light from './components/Light';
-import LightingMode from './components/LightingMode';
 
 export default (
   <Route component={App}>

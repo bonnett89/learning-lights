@@ -15,7 +15,7 @@ class LightingMode extends React.Component {
   }
 
   componentDidMount() {
-    console.log('Mounted');
+    //console.log('Mounted');
     LightingModeStore.listen(this.onChange);
   }
 
@@ -25,18 +25,21 @@ class LightingMode extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
     var mode = this.state.mode;
-
-    LightingModeActions.LightingMode(mode);
+    LightingModeActions.lightingMode(mode);
   }
 
   render() {
+    if (this.state.mode == 'learning') {
+      var labelStyle = 'label label-success pull-right';
+    } else if (this.state.mode == 'manual') {
+      var labelStyle = 'label label-danger pull-right';
+    }
     return (
       <div className='container'>
         <div className='row flipInX animated'>
           <div className='panel panel-default'>
-            <div className='panel-heading'>Lighting Mode</div>
+            <div className='panel-heading'>Lighting Mode<span className={labelStyle}>{this.state.mode}</span></div>
               <div className='panel-body'>
                 <form onSubmit={this.handleSubmit.bind(this)}>
                   <div className={'form-group'}>

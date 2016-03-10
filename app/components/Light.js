@@ -29,15 +29,17 @@ class Light extends React.Component {
   }
 
   render() {
+    if (this.state.lightState == 'on') {
+      var labelStyle = 'label label-success pull-right';
+    } else if (this.state.lightState == 'off') {
+      var labelStyle = 'label label-danger pull-right';
+    }
     return (
       <div className='container'>
         <div className='row flipInX animated'>
           <div className='panel panel-default'>
-            <div className='panel-heading'>WeMo Light</div>
+            <div className='panel-heading'>WeMo Light<span className={labelStyle}>{this.state.lightState}</span></div>
             <div className='panel-body'>
-              <div>
-                <label>{this.state.lightState}</label>
-              </div>
               <div className='Button'>
                 <button type='button' id='on' className='btn btn-primary' onClick={this.changeLightState.bind(this, 'on')}>On</button>
                 <button type='button' id='off' className='btn btn-secondary' onClick={this.changeLightState.bind(this, 'off')}>Off</button>

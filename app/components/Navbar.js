@@ -59,7 +59,6 @@ class Navbar extends React.Component {
               <div className='tri invert'></div>
             </span>
             Learning Light System
-            <span className='badge badge-up badge-danger'>{this.state.onlineUsers}</span>
           </Link>
         </div>
         <div id='navbar' className='navbar-collapse collapse'>
