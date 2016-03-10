@@ -160,8 +160,8 @@ function learningMode() {
     //{ light: 0.02, day: 0.4, time: 0.1456332434279 }
     var result = predict({ light: l, day: d, time: t});
 
-    //console.log('OFF: ' + result['off']);
-    //console.log('ON: ' + result['on']);
+    console.log('OFF: ' + result['off']);
+    console.log('ON: ' + result['on']);
 
     particleGetLightOn(function(err, data){
       if (err) console.error('Error: ' + err);
@@ -217,6 +217,7 @@ apiRoutes.use(function(req, res, next) {
 });
 */
 
+
 apiRoutes.get('/', function(req, res) {
   res.json({ message: 'Welcome to the coolest API on earth!' });
 });
@@ -259,9 +260,11 @@ apiRoutes.post('/authenticate', function(req, res) {
   });
 });
 
+
 /*
 * GET /setup
 */
+
 
 app.get('/setup', function(req, res) {
 
@@ -279,6 +282,7 @@ app.get('/setup', function(req, res) {
     res.json({ success: true });
   });
 });
+
 
 /*
 * GET /api/lightinglevels
@@ -311,8 +315,8 @@ var intervalId;
 
 app.post('/api/lightingmode', function(req, res, next) {
   var mode = req.body.mode;
-  console.log(req.body.mode);
-  //console.log('Mode: ' + mode);
+  //console.log(req.body.mode);
+  console.log('Mode: ' + mode);
   try {
     if (mode == 'learning') {
       intervalId = setInterval(learningMode, 10000);
