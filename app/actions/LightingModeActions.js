@@ -5,7 +5,6 @@ class LightingModeActions {
     this.generateActions(
       'changeLightingModeSuccess',
       'changeLightingModeFail',
-      'lightingMode',
       'updateMode'
     );
   }
@@ -17,7 +16,7 @@ class LightingModeActions {
       data: { mode: mode }
     })
       .done((data) => {
-        //console.log('ajax done');
+        console.log('ajax done');
         this.actions.changeLightingModeSuccess(data.message);
       })
       .fail((jqXhr) => {
