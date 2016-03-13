@@ -2,6 +2,10 @@ Feature: Lighting Mode Feature
   As a user of learning-lights
   I want to be able to change the lighting mode
 
+  @home
+  Scenario: Home Page
+    Given I am on the Home page
+
   Scenario: View Modes
     Given I am on the Home page
     Then I should see the Lighting Modes available
