@@ -6,6 +6,9 @@ Logs
 node_modules
 bower_components
 
+# Testing
+Gemfile.lock
+
 # Project
 .idea
 .DS_Store
