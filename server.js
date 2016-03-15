@@ -71,7 +71,8 @@ function logIn() {
 function getLightLevel() {
   particleGetLightLevel(function(err, data){
     if (err) console.error('Error: ' + err);
-    insertLight(data);
+    console.log('Light Level: ' + data);
+    //insertLight(data);
   });
 }
 
@@ -104,8 +105,21 @@ function lightOff(){
 function getLightOn(){
   particleGetLightOn(function(err, data){
     if (err) console.error('Error: ' + err);
-    //console.log('Data: ' + data);
+    //console.log('Light On: ' + data);
     return data;
+  });
+}
+
+function insertLight(lightLevel, lightState, date) {
+  var light = new Light({
+    lightLevel: lightLevel,
+    date: date,
+    lightState: lightState
+  });
+  //console.log(light._id);
+  light.save(function(err, light) {
+    if(err) return console.error(err);
+    console.log('Light reading saved!')
   });
 }
 
@@ -130,6 +144,45 @@ function logLightLevel() {
         callback();
         });
 }
+
+function logLightData() {
+
+  particleGetLightLevel(function(err, data){
+    if (err) console.error('Error: ' + err);
+    getLightState(data);
+  });
+
+  function getLightState(lightLevel) {
+    particleGetLightOn(function(err, data){
+      if (err) console.error('Error: ' + err);
+      createDate(lightLevel, data);
+    })
+  }
+
+  function createDate(lightLevel, lightState) {
+    var date = new Date(Date.now());
+    console.log(lightLevel);
+    console.log(lightState);
+    console.log(date);
+    insertLight(lightLevel, lightState, date);
+  }
+}
+
+function getLightLevel (callback) {
+  var particle = new Particle();
+  particle.getVariable({ deviceId: deviceId, name: 'lightReading', auth: token }).then(
+    function(data){
+      var value = data.body['result'];
+      callback(null, value);
+    }, 
+    function(err) {
+        console.log('An error occurred while getting attrs:', err);
+        callback(err);
+    }
+  );
+}
+
+//setInterval(logLightData, 5000);
 
 function learningMode() {
   var particle = new Particle();
@@ -349,6 +402,23 @@ app.post('/api/lightstate', function(req, res, next) {
     }
   } catch (e) {
     return res.status(400).send({ message: 'Lighting State Error'});
+  }
+});
+
+app.post('/api/loggingState', function(req, res, next){
+  var logging = req.body.logState;
+  //var interval = req.body.interval;
+  console.log(logging);
+  try {
+    if (logging == 'log') {
+      intervalId = setInterval(logLightData, 10000);
+      res.send( { message: 'light data now logging' });
+    } else {
+      clearInterval(intervalId);
+      res.send( { message: 'no longer logging' });
+    }
+  } catch (e) {
+    return res.status(400).send({ message: 'Logging error' });
   }
 });
 
