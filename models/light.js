@@ -5,7 +5,8 @@ var ObjectId = mongoose.Types.ObjectId;
 
 var lightSchema = new mongoose.Schema({
   value: String,
-  date: Date
+  date: Date,
+  lightState: Number
 });
 
 module.exports = mongoose.model('Light', lightSchema);
