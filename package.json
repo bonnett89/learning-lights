@@ -1,7 +1,7 @@
 {
-  "name": "simple-light-logging",
+  "name": "learning-lights",
   "version": "1.0.0",
-  "description": "Light Logging",
+  "description": "Learning Light System",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bonnett89/simple-light-logging.git"
+    "url": "git+https://github.com/bonnett89/learning-lights.git"
   },
   "author": "James Bonnett",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bonnett89/simple-light-logging/issues"
+    "url": "https://github.com/bonnett89/learning-lights/issues"
   },
-  "homepage": "https://github.com/bonnett89/simple-light-logging#readme",
+  "homepage": "https://github.com/bonnett89/learning-lights#readme",
   "dependencies": {
     "alt": "^0.17.8",
     "async": "^1.5.2",
