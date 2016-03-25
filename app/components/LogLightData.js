@@ -33,7 +33,7 @@ class LogLightData extends React.Component {
   render() {
     if (this.state.logState == 'log') {
       var labelStyle = 'label label-success pull-right';
-    } else if (this.state.logState == 'no_log') {
+    } else if (this.state.logState == 'nolog') {
       var labelStyle = 'label label-danger pull-right';
     }
     return (
@@ -50,7 +50,7 @@ class LogLightData extends React.Component {
                       <label htmlFor='logging'>Logging</label>
                     </div>
                     <div className='radio radio-inline'>
-                      <input type='radio' name='logging_state' id='notLogging' value='no_log' checked={this.state.logState === 'no_log'}
+                      <input type='radio' name='logging_state' id='notLogging' value='nolog' checked={this.state.logState === 'nolog'}
                         onChange={LogLightDataActions.updateLogState}/>
                       <label htmlFor='notLogging'>Not Logging</label>
                     </div>

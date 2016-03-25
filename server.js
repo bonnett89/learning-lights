@@ -76,6 +76,7 @@ function getLightLevel() {
   });
 }
 
+/*
 function insertLight(data) {
   var light = new Light({
     value: data,
@@ -87,6 +88,7 @@ function insertLight(data) {
     console.log('Light reading saved!');
   });
 }
+*/
 
 function lightOn(){
   particleLightOn(function(err, data){
@@ -116,7 +118,7 @@ function insertLight(lightLevel, lightState, date) {
     date: date,
     lightState: lightState
   });
-  //console.log(light._id);
+  console.log(light);
   light.save(function(err, light) {
     if(err) return console.error(err);
     console.log('Light reading saved!')
@@ -161,9 +163,9 @@ function logLightData() {
 
   function createDate(lightLevel, lightState) {
     var date = new Date(Date.now());
-    console.log(lightLevel);
-    console.log(lightState);
-    console.log(date);
+    //console.log(lightLevel);
+    //console.log(lightState);
+    //console.log(date);
     insertLight(lightLevel, lightState, date);
   }
 }
@@ -342,7 +344,7 @@ app.get('/setup', function(req, res) {
 * retrieve lighting levels from mongo
 */
 app.get('/api/lightlevels', function(req, res, next){
-  console.log("API CALL MADE");
+  //console.log("API CALL MADE");
   var params = req.query;
   var conditions = {};
 
@@ -408,16 +410,18 @@ app.post('/api/lightstate', function(req, res, next) {
 app.post('/api/loggingState', function(req, res, next){
   var logging = req.body.logState;
   //var interval = req.body.interval;
-  console.log(logging);
+  console.log('Log State: ' + logging);
   try {
     if (logging == 'log') {
-      intervalId = setInterval(logLightData, 10000);
+      intervalId = setInterval(logLightData, 60000);
       res.send( { message: 'light data now logging' });
     } else {
+      //console.log('Turning off: ' + intervalId)
       clearInterval(intervalId);
       res.send( { message: 'no longer logging' });
     }
   } catch (e) {
+    console.log('Catch error: ' + e)
     return res.status(400).send({ message: 'Logging error' });
   }
 });
