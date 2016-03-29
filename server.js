@@ -37,6 +37,9 @@ var particleLightOn = require('./particle/Particle').lightOn;
 var particleLightOff = require('./particle/Particle').lightOff;
 var particleGetLightOn = require('./particle/Particle').getLightOn;
 
+//neural network
+var network_file = require('./neural_net/data/brain_network.json');
+
 var app = express();
 
 // Connect to Mongo Database
@@ -76,18 +79,6 @@ function getLightLevel() {
   });
 }
 
-function insertLight(data) {
-  var light = new Light({
-    value: data,
-    date: new Date(Date.now())
-  });
-  //console.log(light._id);
-  light.save(function(err, light) {
-    if(err) return console.error(err);
-    console.log('Light reading saved!');
-  });
-}
-
 function lightOn(){
   particleLightOn(function(err, data){
     if (err) console.error('Error: ' + err);
@@ -116,7 +107,7 @@ function insertLight(lightLevel, lightState, date) {
     date: date,
     lightState: lightState
   });
-  //console.log(light._id);
+  console.log(light);
   light.save(function(err, light) {
     if(err) return console.error(err);
     console.log('Light reading saved!')
@@ -161,9 +152,6 @@ function logLightData() {
 
   function createDate(lightLevel, lightState) {
     var date = new Date(Date.now());
-    console.log(lightLevel);
-    console.log(lightState);
-    console.log(date);
     insertLight(lightLevel, lightState, date);
   }
 }
@@ -186,6 +174,7 @@ function getLightLevel (callback) {
 
 function learningMode() {
   var particle = new Particle();
+  var network = network_file;
 
   particleGetLightLevel(function(err, data){
     if (err) console.error('Error: ' + err);
@@ -199,19 +188,31 @@ function learningMode() {
     //console.log(d);
 
     var dayOfWeek = d.getDay() / 10;
-    var timeInMs = d.getTime() / 10000000000000;
+    //GET TIME OF DAY
+    var hour = addZero(d.getHours()).toString();
+    var minutes = addZero(d.getMinutes()).toString();
+    var seconds = addZero(d.getSeconds()).toString();
 
-    getPrediction(lightLevel, dayOfWeek, timeInMs);
+    var timeCombined = '0.'+ hour + minutes + seconds;
+
+    var time = parseFloat(timeCombined);
+
+    getPrediction(lightLevel, dayOfWeek, time);
+  }
+
+  function addZero(i) {
+    if(i < 10) {
+    i = '0' + i;
+    }
+    return i;
   }
 
   function getPrediction(l,d,t) {
     
     console.log('Light Level = ' + l * 1000);
-    //console.log('Day of Week = ' + d);
-    //console.log('Time Since 1970 = ' + t);
     
     //{ light: 0.02, day: 0.4, time: 0.1456332434279 }
-    var result = predict({ light: l, day: d, time: t});
+    var result = predict({ light: l, day: d, time: t}, network);
 
     console.log('OFF: ' + result['off']);
     console.log('ON: ' + result['on']);
@@ -342,7 +343,7 @@ app.get('/setup', function(req, res) {
 * retrieve lighting levels from mongo
 */
 app.get('/api/lightlevels', function(req, res, next){
-  console.log("API CALL MADE");
+  //console.log("API CALL MADE");
   var params = req.query;
   var conditions = {};
 
@@ -408,16 +409,18 @@ app.post('/api/lightstate', function(req, res, next) {
 app.post('/api/loggingState', function(req, res, next){
   var logging = req.body.logState;
   //var interval = req.body.interval;
-  console.log(logging);
+  console.log('Log State: ' + logging);
   try {
     if (logging == 'log') {
-      intervalId = setInterval(logLightData, 10000);
+      intervalId = setInterval(logLightData, 60000);
       res.send( { message: 'light data now logging' });
     } else {
+      //console.log('Turning off: ' + intervalId)
       clearInterval(intervalId);
       res.send( { message: 'no longer logging' });
     }
   } catch (e) {
+    console.log('Catch error: ' + e)
     return res.status(400).send({ message: 'Logging error' });
   }
 });

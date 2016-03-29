@@ -4,7 +4,7 @@ var ObjectIdSchema = Schema.ObjectId;
 var ObjectId = mongoose.Types.ObjectId;
 
 var lightSchema = new mongoose.Schema({
-  value: String,
+  lightLevel: String,
   date: Date,
   lightState: Number
 });
