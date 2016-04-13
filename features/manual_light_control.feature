@@ -1,7 +1,7 @@
-Feature: Lightbulb feature
+Feature: Manual Light Control
   As a user of learning-lights
-  I want to be able to turn a lightbulb on / off
-  So that I don't have to do it manually
+  I want to be able to manually control a light
+  So that I have control of a light
 
   Scenario: Turn light on
     Given I am on the Home screen
