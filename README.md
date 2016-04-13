@@ -44,6 +44,12 @@ In the browser navigate to:
 
 You should see the learning lights home page.
 
+Should this not work, the system can be cloned from github using:
+
+* ```git clone https://github.com/bonnett89/learning-lights.git```
+
+And then, follow the above steps.
+
 
 
 
