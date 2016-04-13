@@ -5,7 +5,7 @@ var Light = require('../../models/light');
 var jsonfile = require('jsonfile');
 var config = require('../../config');
 
-var file = '../data/brain_network.json'
+var file = '../data/brain_network.json';
 
 var net = new brain.NeuralNetwork();
 
@@ -52,7 +52,7 @@ var generateTrainingInput = function(data) {
 
   //GET LIGHT LEVEL
   var lightValue =  data['lightLevel'];
-  var value = parseInt(lightValue) / 1000;
+  var value = parseInt(lightValue) / 10000;
  
   //GET DATE DATA
   var d = new Date(data['date']);

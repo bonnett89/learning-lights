@@ -66,21 +66,3 @@ class LogLightData extends React.Component {
 }
 
 export default LogLightData;
-
-/*
-<form onSubmit={this.handleSubmit.bind(this)}>
-                  <div className={'form-group'}>
-                    <div className='radio radio-inline'>
-                      <input type='radio' name='logging_state' id='logging' value='logging' checked={this.state.logState === 'logging'}
-                        onChange={LogLightDataActions.updateLogState}/>
-                      <label htmlFor='logging'>Logging</label>
-                    </div>
-                    <div className='radio radio-inline'>
-                      <input type='radio' name='logging_state' id='notLogging' value='notLogging' checked={this.state.logState === 'notLogging'}
-                        onChange={LogLightDataActions.updateLogStater}/>
-                      <label htmlFor='notLogging'>Not Logging</label>
-                    </div>
-                  </div>
-                  <button type='submit' className='btn btn-primary'>Submit</button>
-                </form>
-                */

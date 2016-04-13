@@ -1,7 +1,7 @@
-Feature: Light Logging
+Feature: Capture Training Data
   As a user of learning-lights
-  I want to be able to log data
-  So that I can use the data to train the neural network
+  I want to be able to log training data
+  So that I can use the data to train a neural network
 
   Scenario: Enable Logging
     Given I am on Light Logging page

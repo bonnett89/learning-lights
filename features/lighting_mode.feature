@@ -2,10 +2,6 @@ Feature: Lighting Mode Feature
   As a user of learning-lights
   I want to be able to change the lighting mode
 
-  @home
-  Scenario: Home Page
-    Given I am on the Home page
-
   Scenario: View Modes
     Given I am on the Home page
     Then I should see the Lighting Modes available
@@ -35,3 +31,15 @@ Feature: Lighting Mode Feature
   Scenario: Determine Mode
     Given I am on the Home page
     Then I should clearly see the mode currently running
+
+  Scenario: Light Control through Learning - ON
+    Given I am on the Home page
+    And learning mode is enabled
+    When the network predicts that a lightbulb should be ON
+    Then the smart light bulb should go to an ON state
+
+  Scenario: Light Control through learning - OFF
+    Given I am on the Home page
+    And learning mode is enabled
+    When the network predicts that a lightbulb should be OFF
+    Then the smart light bulb should go to an OFF state
